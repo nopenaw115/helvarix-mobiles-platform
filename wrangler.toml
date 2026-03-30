@@ -1,5 +1,3 @@
-
-
 cpu_ms = 50
 name = "helvarix-orbital-platform"
 main = "src/index.js"
