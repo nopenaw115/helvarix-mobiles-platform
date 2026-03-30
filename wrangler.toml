@@ -27,3 +27,17 @@ ENVIRONMENT = "production"
 # Limits tuned for mobile-friendly delivery
 [limits]
 cpu_ms = 50
+rm -f wrangler.toml wrangler.json wrangler.file.json
+
+cat > wrangler.jsonc <<'EOF'
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "helvarix-mobile-orbital-platform",
+  "compatibility_date": "2026-03-30",
+  "assets": {
+    "directory": "."
+  }
+}
+EOF
+
+npx wrangler deploy
