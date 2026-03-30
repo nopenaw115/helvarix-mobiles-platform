@@ -26,7 +26,8 @@ ENVIRONMENT = "production"
 
 # Limits tuned for mobile-friendly delivery
 [limits]
-cpu_ms = 50{
+cpu_ms = 50
+{
 "name": "helvarix-mobile-orbital-platform",
 "compatibility_date": "2026-03-30",
 "assets": {
