@@ -38,13 +38,6 @@
       -webkit-text-size-adjust:100%;
       touch-action:manipulation;
     }
-    body.mobile-scroll{
-      overflow:auto;
-      overscroll-behavior-y:contain;
-    }
-    body.globe-mode{
-      overflow:hidden;
-    }
     #app {
       position:fixed;
       inset:0;
@@ -67,7 +60,7 @@
       max-width:calc(100vw - 24px);
       background:var(--panel);
       border:1px solid var(--stroke);
-      border-radius:18px;
+      border-radius:14px;
       box-shadow:var(--shadow);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -116,7 +109,6 @@
     }
 
     .panelBody{ padding:12px 14px 14px; }
-    .panelToggle{ display:none; }
     .panel.right .panelBody{
       padding:12px 14px 14px;
       display:flex;
@@ -259,1095 +251,1269 @@
       display:flex;
       gap:12px;
       align-items:center;
-      z-index:12;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      white-space:nowrap;
-    }
-    #hud b{ color:var(--solarGold); }
-
-    #legend{
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      width:min(340px, calc(100vw - 24px));
-      background:var(--panel2);
-      border:1px solid rgba(120,160,255,.18);
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      z-index:11;
-      color:var(--text);
-      overflow:hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    #legend .panelHeader{ padding-bottom:8px; }
-    #legend .panelBody{ padding-top:10px; }
-    .legendItem{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:12px;
-      color:rgba(234,241,255,.92);
-      margin:8px 0;
-    }
-    .swatch{
-      width:14px; height:14px; border-radius:50%;
-      box-shadow:0 0 16px currentColor;
-      flex:0 0 auto;
-    }
-    .sw-sat{ color:#7A5CFF; background:#7A5CFF; }
-    .sw-gs{ color:#00E6FF; background:#00E6FF; }
-    .sw-bad{ color:#FFCC33; background:#FFCC33; }
-    .legendHint{
-      margin-top:8px;
-      font-size:11px;
-      color:rgba(159,179,217,.92);
-      line-height:1.35;
-    }
-
-    #toast{
-      position:fixed;
-      left:50%; transform:translateX(-50%);
-      top:14px;
-      background:rgba(10,14,28,.9);
-      color:#EAF1FF;
-      border:1px solid rgba(0,230,255,.24);
-      border-radius:999px;
-      padding:10px 14px;
-      font-size:12px;
-      z-index:30;
-      opacity:0;
-      pointer-events:none;
-      transition:opacity .25s ease;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    #toast.show{ opacity:1; }
-
-    #mobileActions{
-      position:fixed;
-      top:12px;
-      left:12px;
-      right:12px;
-      z-index:25;
-      display:none;
-      gap:10px;
-      justify-content:flex-start;
+      z-index:20;
       flex-wrap:wrap;
-      pointer-events:none;
+      justify-content:center;
     }
-    #mobileActions .actionBtn{
-      pointer-events:auto;
-      background:rgba(10,14,28,.82);
-      color:var(--text);
-      border:1px solid rgba(120,160,255,.2);
-      padding:12px 14px;
-      border-radius:14px;
-      font-size:13px;
-      font-weight:800;
-      letter-spacing:.3px;
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      min-height:46px;
-      cursor:pointer;
-    }
-    #mobileActions .actionBtn.primary{
-      background:linear-gradient(90deg, rgba(122,92,255,.95), rgba(0,230,255,.95));
-      color:#06101C;
-      border:0;
-    }
-    #mobileActions .actionBtn.hidden{ display:none; }
+    #hud .k{ color:rgba(159,179,217,.95); font-weight:700; }
+    #hud .v{ color:rgba(234,241,255,.95); font-weight:800; letter-spacing:.2px; }
+    #hud .dot{ width:6px; height:6px; border-radius:50%; background:var(--stellarCyan); box-shadow:0 0 10px rgba(0,230,255,.6); }
 
-    .globe-mode .panel,
-    .globe-mode #hud,
-    .globe-mode #legend{
-      display:none !important;
+    .panel.planet{
+      top:auto;
+      bottom:18px;
+      right:18px;
+      width:340px;
+      z-index:15;
     }
-    .globe-mode #mobileActions{
-      display:flex !important;
+
+    @media (max-width: 980px){
+      .panel.right{ display:none; }
+      .panel.left{ width:min(340px, calc(100vw - 24px)); }
+      .panel.planet{ display:none; }
     }
 
     @media (max-width: 768px){
       html, body{
         overflow:auto;
-        overscroll-behavior-y:contain;
       }
-      body{
-        touch-action:auto;
+      #app{
+        position:relative;
+        min-height:100dvh;
+        overflow:visible;
+        padding:12px 12px 108px;
+        box-sizing:border-box;
       }
-      body.globe-mode{
-        overflow:hidden;
-      }
-      #mobileActions{ display:flex; }
-      .panel{
+      #c{
         position:fixed;
-        left:12px !important;
-        right:12px !important;
+        inset:0;
+        width:100vw;
+        height:100dvh;
+      }
+      .panel,
+      .panel.left,
+      .panel.right,
+      .panel.planet{
+        position:relative;
         top:auto;
-        width:auto !important;
+        right:auto;
+        bottom:auto;
+        left:auto;
+        width:100%;
         max-width:none;
-        border-radius:18px;
+        margin:0 0 12px;
       }
-      .panel.left{
-        bottom:92px;
-        max-height:min(58dvh, 620px);
+      .panel.right,
+      .panel.planet{
+        display:block;
       }
-      .panel.right{
-        bottom:92px;
-        max-height:min(50dvh, 420px);
-      }
-      .panelHeader{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:10px;
-      }
-      .panelToggle{
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        width:36px;
-        height:36px;
-        border-radius:10px;
-        border:1px solid rgba(120,160,255,.18);
-        background:rgba(0,0,0,.28);
-        color:var(--text);
-        font-size:18px;
-        cursor:pointer;
-      }
-      .panel.collapsed .panelBody{
-        display:none;
-      }
-      .panel.collapsed{
+      .panel .panelBody{
         max-height:none;
       }
-      #legend{
-        left:12px;
-        right:12px;
-        width:auto;
-        bottom:92px;
+      .row{
+        flex-direction:column;
+        gap:0;
+      }
+      .satList{
+        max-height:40dvh;
+      }
+      .satName{
+        max-width:calc(100vw - 132px);
       }
       #hud{
         left:12px;
         right:12px;
-        bottom:12px;
+        bottom:max(12px, env(safe-area-inset-bottom));
         transform:none;
-        white-space:normal;
         border-radius:18px;
-        justify-content:center;
-        flex-wrap:wrap;
+        padding:12px 14px calc(12px + env(safe-area-inset-bottom));
       }
-      .row{ flex-direction:column; }
-      .satName{ max-width:60vw; }
     }
   </style>
 </head>
+
 <body>
   <div id="app">
     <canvas id="c"></canvas>
 
-    <div id="mobileActions" aria-label="Mobile controls">
-      <button id="openGlobeBtn" class="actionBtn primary">Open Globe</button>
-      <button id="backToPlatformBtn" class="actionBtn hidden">Back to Platform</button>
-      <button id="resetGlobeBtn" class="actionBtn hidden">Reset View</button>
-    </div>
-
-    <section class="panel left" id="controlPanel">
+    <div class="panel left">
       <div class="panelHeader">
-        <div>
-          <div class="title">HVRX Orbital Platform</div>
-          <div class="subtitle">Deploy up to two satellites, route to a named target or coordinates, and monitor the selected object live.</div>
-        </div>
-        <button class="panelToggle" type="button" data-target="controlPanel" aria-label="Toggle platform panel">−</button>
+        <div class="title">HVRX ORBITAL PLATFORM</div>
+        <div class="subtitle">3D Earth + live public satellite positions (TLE). Orbital planner gives weather-aware launch window suggestions.</div>
+        <div class="chip">BETA</div>
       </div>
+
       <div class="panelBody">
-        <div class="chip">Nebula Platform • 3D Orbital Map</div>
-
-        <label for="satelliteName">Satellite Name</label>
-        <input id="satelliteName" type="text" placeholder="e.g. HVRX-ALPHA" maxlength="24" />
-
-        <label for="targetType">Target Mode</label>
-        <select id="targetType">
-          <option value="name">Country / City / Area</option>
-          <option value="coords">Coordinates</option>
+        <label>Recommended launch sites</label>
+        <select id="launchPreset">
+          <option value="28.3922,-80.6077">Cape Canaveral, USA (28.3922, -80.6077)</option>
+          <option value="34.6328,-120.6107">Vandenberg, USA (34.6328, -120.6107)</option>
+          <option value="45.9650,63.3050">Baikonur, KZ (45.9650, 63.3050)</option>
+          <option value="5.2360,-52.7680">Kourou, FR-GF (5.2360, -52.7680)</option>
+          <option value="13.7199,80.2304">Sriharikota, IN (13.7199, 80.2304)</option>
+          <option value="31.2510,131.0820">Tanegashima, JP (31.2510, 131.0820)</option>
         </select>
 
-        <div id="nameTargetWrap">
-          <label for="targetName">Target</label>
-          <input id="targetName" type="text" placeholder="e.g. France, Paris, Sahara" />
-        </div>
-
-        <div id="coordTargetWrap" style="display:none;">
-          <div class="row">
-            <div>
-              <label for="lat">Latitude</label>
-              <input id="lat" type="number" step="0.0001" min="-90" max="90" placeholder="48.8566" />
-            </div>
-            <div>
-              <label for="lon">Longitude</label>
-              <input id="lon" type="number" step="0.0001" min="-180" max="180" placeholder="2.3522" />
-            </div>
+        <div class="row">
+          <div>
+            <label>Launch site (lat, lon)</label>
+            <input id="launchLatLon" value="28.3922,-80.6077" />
           </div>
         </div>
 
-        <label for="duration">Mission Duration (min)</label>
-        <input id="duration" type="number" min="1" max="240" value="30" />
+        <div class="row">
+          <div>
+            <label>Target inclination (deg)</label>
+            <input id="targetInc" value="51.6" />
+          </div>
+          <div>
+            <label>Target altitude (km)</label>
+            <input id="targetAlt" value="400" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Target RAAN (deg, optional)</label>
+            <input id="targetRAAN"
+                   placeholder="0–360 (leave blank for lighting schedule only)"
+                   autocomplete="off" />
+          </div>
+        </div>
+        <button id="launchBtn" class="btn">Compute launch window overview</button>
 
-        <label for="analysisType">Analysis Type</label>
-        <select id="analysisType">
-          <option value="imagery">Visual / Imagery</option>
-          <option value="thermal">Thermal</option>
-          <option value="signals">Signals / Spectrum</option>
-          <option value="multispectral">Multispectral</option>
-        </select>
-
-        <label for="notes">Mission Notes</label>
-        <textarea id="notes" placeholder="Optional mission notes, objective, or tags"></textarea>
-
-        <button class="btn" id="launchBtn">Launch Satellite</button>
-        <button class="btn secondary" id="clearBtn">Clear All Satellites</button>
-
+        <label>Launch window overview (UTC)</label>
+        <textarea id="launchOut" placeholder="Recommendations will appear here..."></textarea>
+        <button id="downloadLaunchBtn" class="btn secondary">Download launch overview (.txt)</button>
         <div class="note">
-          Up to <b>2 satellites</b> can be launched. Use manual coordinates for exact targeting.
-          If the target name cannot be resolved, the system will fall back to a best-effort match from the built-in geocoder.
-        </div>
-      </div>
-    </section>
-
-    <section class="panel right" id="satPanel">
-      <div class="panelHeader">
-        <div>
-          <div class="title">Active Objects</div>
-          <div class="subtitle">Select an orbiting object to focus the camera and inspect mission details.</div>
-        </div>
-        <button class="panelToggle" type="button" data-target="satPanel" aria-label="Toggle active objects panel">−</button>
-      </div>
-      <div class="panelBody">
-        <div class="infoBox" id="selectedInfo">
-          <div class="infoRow"><span class="infoK">Selection</span><span class="infoV">None</span></div>
-          <div class="infoRow"><span class="infoK">Mode</span><span class="infoV">Idle</span></div>
-          <div class="infoRow"><span class="infoK">Target</span><span class="infoV">—</span></div>
+          Planner uses free weather data + a simple “orbital congestion index” (how many active sats cluster near your target incl/alt).
         </div>
 
-        <div class="satList" id="satList"></div>
+        <button id="clearBtn" class="btn secondary">Clear</button>
       </div>
-    </section>
-
-    <section id="legend">
-      <div class="panelHeader">
-        <div class="title">Legend</div>
-        <div class="subtitle">Orbital object classes and map hints</div>
-      </div>
-      <div class="panelBody">
-        <div class="legendItem"><span class="swatch sw-sat"></span><span>User / deployed satellites</span></div>
-        <div class="legendItem"><span class="swatch sw-gs"></span><span>Ground stations / target markers</span></div>
-        <div class="legendItem"><span class="swatch sw-bad"></span><span>Debris / caution objects</span></div>
-        <div class="legendHint">
-          Drag to orbit the camera. Use the mouse wheel or pinch gesture to zoom.
-          Tap a satellite in the list to focus it. On mobile, use <b>Open Globe</b> for dedicated globe interaction.
-        </div>
-      </div>
-    </section>
-
-    <div id="hud">
-      <span><b>Camera:</b> Drag to orbit</span>
-      <span><b>Zoom:</b> Wheel / pinch</span>
-      <span><b>Tip:</b> Tap a listed object to focus</span>
     </div>
 
-    <div id="toast" role="status" aria-live="polite"></div>
+    <div class="panel right">
+      <div class="panelHeader">
+        <div class="title">SATELLITES</div>
+        <div class="subtitle">Search and select. Only the selected satellite draws a gold track.</div>
+      </div>
+
+      <div class="panelBody">
+        <label>Search by name / NORAD</label>
+        <input id="search" placeholder="e.g., ISS, STARLINK, 25544..." />
+        <div class="satList" id="satList"></div>
+
+        <div class="infoBox">
+          <div class="infoRow"><span class="infoK">Selected</span><span class="infoV" id="infoName">—</span></div>
+          <div class="infoRow"><span class="infoK">Lat</span><span class="infoV" id="infoLat">—</span></div>
+          <div class="infoRow"><span class="infoK">Lon</span><span class="infoV" id="infoLon">—</span></div>
+          <div class="infoRow"><span class="infoK">Alt (km)</span><span class="infoV" id="infoAlt">—</span></div>
+          <div class="infoRow"><span class="infoK">Speed (km/s)</span><span class="infoV" id="infoSpd">—</span></div>
+          <div class="infoRow"><span class="infoK">UTC</span><span class="infoV" id="infoUtc">—</span></div>
+        </div>
+
+        <div class="note" id="catalogNote">Catalog: —</div>
+      </div>
+    </div>
+
+    <div class="panel planet">
+      <div class="panelHeader">
+        <div class="title">BODY SELECT</div>
+        <div class="subtitle">Pick a planet/moon catalog. Earth is wired to public “active” TLEs. Others use Horizons spacecraft ephemerides.</div>
+      </div>
+      <div class="panelBody">
+        <label>Celestial body</label>
+        <select id="bodySelect">
+          <option value="earth">Earth (Active satellites)</option>
+          <option value="moon">Moon (Horizons)</option>
+          <option value="mars">Mars (Horizons)</option>
+          <option value="jupiter">Jupiter (Horizons)</option>
+        </select>
+        <div class="note" id="bodyNote">
+          Earth loads from a public TLE catalog. Moon/Mars/Jupiter load from Horizons (spacecraft ephemeris per-object).
+        </div>
+      </div>
+    </div>
+
+    <div id="hud">
+      <span class="dot"></span>
+      <span class="k">STATUS</span><span class="v" id="status">READY</span>
+      <span class="k">SAT</span><span class="v" id="satCount">0</span>
+      <span class="k">SELECTED</span><span class="v" id="selectedName">—</span>
+    </div>
   </div>
 
-  <script>
-  (() => {
-    const canvas = document.getElementById('c');
-    const gl = canvas.getContext('webgl', { antialias:true, alpha:false, preserveDrawingBuffer:false });
-    if(!gl){
-      alert('WebGL not supported on this device/browser.');
+<script src="./assets/vendor/satellite.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+  import * as THREE from "three";
+  import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/controls/OrbitControls.js";
+  const satellite = window.satellite || null;
+  console.log("satellite.js loaded", !!satellite);
+
+  (function () {
+    "use strict";
+
+    // ---------- UI helpers ----------
+    const el = (id) => document.getElementById(id);
+
+    const statusEl = el("status");
+    const satCountEl = el("satCount");
+    const selectedNameEl = el("selectedName");
+    const satListEl = el("satList");
+    const searchEl = el("search");
+    const catalogNoteEl = el("catalogNote");
+    const bodySelectEl = el("bodySelect");
+
+    const infoName = el("infoName");
+    const infoLat  = el("infoLat");
+    const infoLon  = el("infoLon");
+    const infoAlt  = el("infoAlt");
+    const infoSpd  = el("infoSpd");
+    const infoUtc  = el("infoUtc");
+
+    const launchOut = el("launchOut");
+    const launchLatLon = el("launchLatLon");
+    const targetIncEl = el("targetInc");
+    const targetAltEl = el("targetAlt");
+    const presetEl = el("launchPreset");
+    const targetRAANEl = el("targetRAAN");
+
+    function setStatus(s){ if (statusEl) statusEl.textContent = s; }
+    function setSelectedName(s){
+      if (selectedNameEl) selectedNameEl.textContent = s;
+      if (infoName) infoName.textContent = s;
+    }
+    function updateSatCount(n){ if (satCountEl) satCountEl.textContent = String(n); }
+
+    function downloadText(filename, text){
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    // ---------- Hard dependency checks ----------
+    if (!THREE) {
+      setStatus("THREE FAILED");
+      console.error("THREE import failed.");
+      alert("THREE module failed to import. Check Network tab for three.module.js.");
+      return;
+    }
+    if (!OrbitControls) {
+      setStatus("CONTROLS FAILED");
+      console.error("OrbitControls import failed.");
+      alert("OrbitControls module failed to import. Check Network tab for OrbitControls.js.");
       return;
     }
 
-    const DPR_CAP_DESKTOP = 1.5;
-    const DPR_CAP_MOBILE = 1.1;
-    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+    // ---------- Wire presets ----------
+    if (presetEl) {
+      presetEl.addEventListener("change", () => { launchLatLon.value = presetEl.value; });
+    }
 
-    const ui = {
-      satelliteName: document.getElementById('satelliteName'),
-      targetType: document.getElementById('targetType'),
-      targetName: document.getElementById('targetName'),
-      nameTargetWrap: document.getElementById('nameTargetWrap'),
-      coordTargetWrap: document.getElementById('coordTargetWrap'),
-      lat: document.getElementById('lat'),
-      lon: document.getElementById('lon'),
-      duration: document.getElementById('duration'),
-      analysisType: document.getElementById('analysisType'),
-      notes: document.getElementById('notes'),
-      launchBtn: document.getElementById('launchBtn'),
-      clearBtn: document.getElementById('clearBtn'),
-      satList: document.getElementById('satList'),
-      selectedInfo: document.getElementById('selectedInfo'),
-      toast: document.getElementById('toast'),
-      openGlobeBtn: document.getElementById('openGlobeBtn'),
-      backToPlatformBtn: document.getElementById('backToPlatformBtn'),
-      resetGlobeBtn: document.getElementById('resetGlobeBtn')
+    // ---------- Three.js setup ----------
+    const canvas = el("c");
+    const isMobileViewport = () => window.matchMedia("(max-width: 768px)").matches;
+    const getViewport = () => ({
+      width: window.innerWidth,
+      height: window.visualViewport ? Math.round(window.visualViewport.height) : window.innerHeight
+    });
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: !isMobileViewport(), alpha:true });
+    renderer.setPixelRatio(Math.min(isMobileViewport() ? 1.5 : 2, window.devicePixelRatio || 1));
+
+    const scene = new THREE.Scene();
+    const initialViewport = getViewport();
+    const camera = new THREE.PerspectiveCamera(45, initialViewport.width / initialViewport.height, 0.1, 5000);
+    camera.position.set(0, 0, 260);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.target.set(0,0,0);
+    controls.minDistance = 140;
+    controls.maxDistance = 800;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.85);
+    sun.position.set(1, 0.4, 1);
+    scene.add(sun);
+
+    // Stars
+    const starGeo = new THREE.BufferGeometry();
+    const starCount = 2000;
+    const starPos = new Float32Array(starCount * 3);
+    for (let i=0;i<starCount;i++){
+      const r = 2200 + Math.random()*1200;
+      const th = Math.random()*Math.PI*2;
+      const ph = Math.acos(2*Math.random()-1);
+      starPos[i*3+0] = r * Math.sin(ph)*Math.cos(th);
+      starPos[i*3+1] = r * Math.cos(ph);
+      starPos[i*3+2] = r * Math.sin(ph)*Math.sin(th);
+    }
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 2, sizeAttenuation: true })));
+
+    // ---------- Earth / Planet Mesh ----------
+    const R = 100;
+    const EARTH_KM = 6371;
+    const SCALE = R / EARTH_KM; // Earth scale (kept for TLE/ECEF path)
+
+    // body radii + current scale for Horizons bodies
+    const BODY_RADIUS_KM = {
+      earth: 6371,
+      moon: 1737.4,
+      mars: 3389.5,
+      jupiter: 69911
+    };
+    let currentBody = "earth";
+    let currentScale = R / (BODY_RADIUS_KM[currentBody] || EARTH_KM);
+
+    // Horizons center codes (SSB@BODY)
+    const BODY_CENTER = {
+      moon: "500@301",
+      mars: "500@499",
+      jupiter: "500@599"
     };
 
-    const panelToggles = Array.from(document.querySelectorAll('.panelToggle'));
-    panelToggles.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = document.getElementById(btn.dataset.target);
-        if(!target) return;
-        target.classList.toggle('collapsed');
-        btn.textContent = target.classList.contains('collapsed') ? '+' : '−';
+    // “Exhaustive” practical catalogs (best-effort via name lookup).
+    // If you want true reliability, swap to { spkid: "..." } once you confirm IDs.
+    const BODY_CRAFT = {
+      moon: [
+        { query: "LRO", name: "LRO" },
+        { query: "CAPSTONE", name: "CAPSTONE" },
+        { query: "KPLO", name: "KPLO (DANURI)" },
+        { query: "DANURI", name: "DANURI (KPLO)" },
+        { query: "Chandrayaan-2", name: "Chandrayaan-2 Orbiter" },
+        { query: "SMART-1", name: "SMART-1 (historic)" },
+        { query: "KAGUYA", name: "Kaguya / SELENE (historic)" },
+        { query: "LADEE", name: "LADEE (historic)" },
+        { query: "GRAIL-A", name: "GRAIL-A (historic)" },
+        { query: "GRAIL-B", name: "GRAIL-B (historic)" }
+      ],
+      mars: [
+        // Current/Recent orbiters
+        { query: "MRO", name: "Mars Reconnaissance Orbiter (MRO)" },
+        { query: "MAVEN", name: "MAVEN" },
+        { query: "Mars Odyssey", name: "Mars Odyssey" },
+        { query: "Mars Express", name: "Mars Express" },
+        { query: "EXOMARS TRACE GAS ORBITER", name: "ExoMars TGO" },
+        { query: "Trace Gas Orbiter", name: "Trace Gas Orbiter (TGO)" },
+        { query: "Tianwen-1", name: "Tianwen-1 Orbiter" },
+        { query: "HOPE", name: "Hope / EMM (UAE)" },
+        { query: "EMM", name: "EMM / Hope (UAE)" },
+        // Historic orbiters (may still resolve in Horizons)
+        { query: "MARS GLOBAL SURVEYOR", name: "Mars Global Surveyor (historic)" },
+        { query: "MARS CLIMATE ORBITER", name: "Mars Climate Orbiter (historic)" },
+        { query: "MARS POLAR LANDER", name: "Mars Polar Lander (historic)" },
+        { query: "PHOBOS 2", name: "Phobos 2 (historic)" },
+        { query: "PHOBOS 1", name: "Phobos 1 (historic)" },
+        { query: "MARS ORBITER MISSION", name: "Mars Orbiter Mission / MOM (historic)" },
+        { query: "MANGALYAAN", name: "Mangalyaan / MOM (historic)" }
+      ],
+      jupiter: [
+        // True Jupiter orbiter today
+        { query: "JUNO", name: "Juno" },
+        // Historic Jupiter orbiter (worked at Jupiter)
+        { query: "GALILEO ORBITER", name: "Galileo Orbiter (historic)" },
+        // Not orbiters, but sometimes useful to display if Horizons resolves them
+        { query: "VOYAGER 1", name: "Voyager 1 (flyby)" },
+        { query: "VOYAGER 2", name: "Voyager 2 (flyby)" },
+        { query: "PIONEER 10", name: "Pioneer 10 (flyby)" },
+        { query: "PIONEER 11", name: "Pioneer 11 (flyby)" },
+        { query: "ULYSSES", name: "Ulysses (flyby)" },
+        { query: "CASSINI", name: "Cassini (flyby)" },
+        { query: "NEW HORIZONS", name: "New Horizons (flyby)" }
+      ]
+    };
+
+    const earthGroup = new THREE.Group();
+    scene.add(earthGroup);
+
+    const earthGeom = new THREE.SphereGeometry(R, 96, 96);
+
+    // One shared planet mesh for all bodies
+    let planetMesh = new THREE.Mesh(
+      earthGeom,
+      new THREE.MeshStandardMaterial({
+        color: 0x223355,
+        roughness: 1.0
+      })
+    );
+
+    earthGroup.add(planetMesh);
+
+    // Atmosphere
+    function buildAtmosphere(){
+      const atmoGeom = new THREE.SphereGeometry(R * 1.02, 96, 96);
+      const atmoMat  = new THREE.MeshBasicMaterial({
+        color: 0x00E6FF,
+        transparent: true,
+        opacity: 0.05
       });
-    });
+      earthGroup.add(new THREE.Mesh(atmoGeom, atmoMat));
+    }
+    buildAtmosphere();
 
-    function syncMobileMode(){
-      if(isMobile()){
-        document.body.classList.add('mobile-scroll');
-      }else{
-        document.body.classList.remove('mobile-scroll');
-        document.body.classList.remove('globe-mode');
-        ui.backToPlatformBtn.classList.add('hidden');
-        ui.resetGlobeBtn.classList.add('hidden');
-        ui.openGlobeBtn.classList.remove('hidden');
+    // Fallback material if textures fail
+    function buildFallbackEarth(){
+      planetMesh.material = new THREE.MeshStandardMaterial({
+        color: 0x0B1530,
+        roughness: 0.85,
+        metalness: 0.10,
+        emissive: new THREE.Color(0x08122A),
+        emissiveIntensity: 1.25
+      });
+      planetMesh.material.needsUpdate = true;
+    }
+
+    const texLoader = new THREE.TextureLoader();
+    texLoader.setCrossOrigin("anonymous");
+
+    const BODY_URLS = {
+      earth: {
+        map:  "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r148/examples/textures/planets/earth_atmos_2048.jpg",
+        normal: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r148/examples/textures/planets/earth_normal_2048.jpg",
+        spec: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r148/examples/textures/planets/earth_specular_2048.jpg"
+      },
+      moon: {
+        map: "https://cdn.jsdelivr.net/gh/mrdoob/three.js@r148/examples/textures/planets/moon_1024.jpg"
+      },
+      mars: {
+        map: "https://upload.wikimedia.org/wikipedia/commons/4/46/Solarsystemscope_texture_2k_mars.jpg"
+      },
+      jupiter: {
+        map: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Solarsystemscope_texture_8k_jupiter.jpg"
       }
-    }
-
-    function showToast(msg){
-      ui.toast.textContent = msg;
-      ui.toast.classList.add('show');
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => ui.toast.classList.remove('show'), 1800);
-    }
-
-    ui.targetType.addEventListener('change', () => {
-      const coords = ui.targetType.value === 'coords';
-      ui.coordTargetWrap.style.display = coords ? '' : 'none';
-      ui.nameTargetWrap.style.display = coords ? 'none' : '';
-    });
-
-    const geoDB = [
-      { name:'Paris', lat:48.8566, lon:2.3522 },
-      { name:'France', lat:46.2276, lon:2.2137 },
-      { name:'New York', lat:40.7128, lon:-74.0060 },
-      { name:'Tokyo', lat:35.6762, lon:139.6503 },
-      { name:'Sahara', lat:23.4162, lon:25.6628 },
-      { name:'Sydney', lat:-33.8688, lon:151.2093 },
-      { name:'São Paulo', lat:-23.5505, lon:-46.6333 },
-      { name:'Cairo', lat:30.0444, lon:31.2357 },
-      { name:'London', lat:51.5074, lon:-0.1278 },
-      { name:'Delhi', lat:28.6139, lon:77.2090 },
-      { name:'Los Angeles', lat:34.0522, lon:-118.2437 },
-      { name:'Antarctica', lat:-82.8628, lon:135.0000 }
-    ];
-
-    function resolveTarget(){
-      if(ui.targetType.value === 'coords'){
-        const lat = parseFloat(ui.lat.value);
-        const lon = parseFloat(ui.lon.value);
-        if(Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180){
-          return { ok:true, lat, lon, label:`${lat.toFixed(4)}, ${lon.toFixed(4)}` };
-        }
-        return { ok:false, reason:'Enter valid latitude and longitude.' };
-      }
-      const q = (ui.targetName.value || '').trim().toLowerCase();
-      if(!q) return { ok:false, reason:'Enter a target location.' };
-      let found = geoDB.find(g => g.name.toLowerCase() === q);
-      if(!found){
-        found = geoDB.find(g => g.name.toLowerCase().includes(q) || q.includes(g.name.toLowerCase()));
-      }
-      if(found){
-        return { ok:true, lat:found.lat, lon:found.lon, label:found.name };
-      }
-      return { ok:false, reason:'Target not found in local geocoder. Try coordinates.' };
-    }
-
-    function resizeCanvas(){
-      const dpr = Math.min(window.devicePixelRatio || 1, isMobile() ? DPR_CAP_MOBILE : DPR_CAP_DESKTOP);
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas.width = Math.max(1, Math.floor(w * dpr));
-      canvas.height = Math.max(1, Math.floor(h * dpr));
-      canvas.style.width = w + 'px';
-      canvas.style.height = h + 'px';
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    }
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      syncMobileMode();
-    }, { passive:true });
-    resizeCanvas();
-    syncMobileMode();
-
-    function v3(x=0,y=0,z=0){ return new Float32Array([x,y,z]); }
-    function add(a,b){ return v3(a[0]+b[0], a[1]+b[1], a[2]+b[2]); }
-    function sub(a,b){ return v3(a[0]-b[0], a[1]-b[1], a[2]-b[2]); }
-    function mul(a,s){ return v3(a[0]*s, a[1]*s, a[2]*s); }
-    function dot(a,b){ return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]; }
-    function cross(a,b){ return v3(a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]); }
-    function len(a){ return Math.hypot(a[0], a[1], a[2]); }
-    function norm(a){ const l = len(a) || 1; return v3(a[0]/l, a[1]/l, a[2]/l); }
-    function mix(a,b,t){ return a + (b-a)*t; }
-    function clamp(x,a,b){ return Math.max(a, Math.min(b, x)); }
-    function smoothstep(a,b,x){ const t = clamp((x-a)/(b-a), 0, 1); return t*t*(3-2*t); }
-
-    function mat4Identity(){
-      const m = new Float32Array(16);
-      m[0]=m[5]=m[10]=m[15]=1;
-      return m;
-    }
-    function mat4Mul(a,b){
-      const m = new Float32Array(16);
-      for(let r=0;r<4;r++){
-        for(let c=0;c<4;c++){
-          m[c+r*4] = a[r*4+0]*b[c+0] + a[r*4+1]*b[c+4] + a[r*4+2]*b[c+8] + a[r*4+3]*b[c+12];
-        }
-      }
-      return m;
-    }
-    function mat4Perspective(fovy, aspect, near, far){
-      const f = 1 / Math.tan(fovy / 2);
-      const nf = 1 / (near - far);
-      const m = new Float32Array(16);
-      m[0] = f / aspect;
-      m[5] = f;
-      m[10] = (far + near) * nf;
-      m[11] = -1;
-      m[14] = (2 * far * near) * nf;
-      return m;
-    }
-    function mat4LookAt(eye, center, up){
-      const z = norm(sub(eye, center));
-      const x = norm(cross(up, z));
-      const y = cross(z, x);
-      const m = mat4Identity();
-      m[0]=x[0]; m[1]=y[0]; m[2]=z[0];
-      m[4]=x[1]; m[5]=y[1]; m[6]=z[1];
-      m[8]=x[2]; m[9]=y[2]; m[10]=z[2];
-      m[12]=-dot(x,eye); m[13]=-dot(y,eye); m[14]=-dot(z,eye);
-      return m;
-    }
-    function mat4Translate(v){
-      const m = mat4Identity();
-      m[12]=v[0]; m[13]=v[1]; m[14]=v[2];
-      return m;
-    }
-    function mat4Scale(sx,sy,sz){
-      const m = mat4Identity();
-      m[0]=sx; m[5]=sy; m[10]=sz;
-      return m;
-    }
-    function mat4RotateY(a){
-      const c = Math.cos(a), s = Math.sin(a);
-      const m = mat4Identity();
-      m[0]= c; m[2]= s;
-      m[8]=-s; m[10]=c;
-      return m;
-    }
-    function mat4RotateX(a){
-      const c = Math.cos(a), s = Math.sin(a);
-      const m = mat4Identity();
-      m[5]= c; m[6]=-s;
-      m[9]= s; m[10]=c;
-      return m;
-    }
-
-    function createShader(type, src){
-      const sh = gl.createShader(type);
-      gl.shaderSource(sh, src);
-      gl.compileShader(sh);
-      if(!gl.getShaderParameter(sh, gl.COMPILE_STATUS)){
-        console.error(gl.getShaderInfoLog(sh));
-        throw new Error('Shader compile failed');
-      }
-      return sh;
-    }
-    function createProgram(vsSrc, fsSrc){
-      const p = gl.createProgram();
-      gl.attachShader(p, createShader(gl.VERTEX_SHADER, vsSrc));
-      gl.attachShader(p, createShader(gl.FRAGMENT_SHADER, fsSrc));
-      gl.linkProgram(p);
-      if(!gl.getProgramParameter(p, gl.LINK_STATUS)){
-        console.error(gl.getProgramInfoLog(p));
-        throw new Error('Program link failed');
-      }
-      return p;
-    }
-
-    const sphereVS = `
-      attribute vec3 aPos;
-      attribute vec3 aNormal;
-      attribute vec2 aUv;
-      uniform mat4 uProj, uView, uModel;
-      varying vec3 vNormal;
-      varying vec3 vWorld;
-      varying vec2 vUv;
-      void main(){
-        vec4 world = uModel * vec4(aPos, 1.0);
-        vWorld = world.xyz;
-        vNormal = mat3(uModel) * aNormal;
-        vUv = aUv;
-        gl_Position = uProj * uView * world;
-      }
-    `;
-
-    const earthFS = `
-      precision mediump float;
-      varying vec3 vNormal;
-      varying vec3 vWorld;
-      varying vec2 vUv;
-      uniform vec3 uCam;
-      uniform float uTime;
-
-      float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
-      float noise(vec2 p){
-        vec2 i = floor(p), f = fract(p);
-        float a = hash(i);
-        float b = hash(i + vec2(1.0,0.0));
-        float c = hash(i + vec2(0.0,1.0));
-        float d = hash(i + vec2(1.0,1.0));
-        vec2 u = f*f*(3.0-2.0*f);
-        return mix(a,b,u.x) + (c-a)*u.y*(1.0-u.x) + (d-b)*u.x*u.y;
-      }
-      float fbm(vec2 p){
-        float v = 0.0, a = 0.5;
-        for(int i=0;i<5;i++){
-          v += a * noise(p);
-          p *= 2.03;
-          a *= 0.5;
-        }
-        return v;
-      }
-
-      void main(){
-        vec3 N = normalize(vNormal);
-        vec3 L = normalize(vec3(0.9, 0.4, 0.3));
-        vec3 V = normalize(uCam - vWorld);
-        float diff = max(dot(N,L), 0.0);
-
-        vec2 uv = vec2(vUv.x * 5.5, vUv.y * 3.2);
-        float land = fbm(uv + vec2(0.0, sin(uTime*0.03)*0.02));
-        float coast = smoothstep(0.47, 0.53, land);
-
-        vec3 oceanDeep = vec3(0.01, 0.06, 0.16);
-        vec3 oceanShallow = vec3(0.03, 0.20, 0.35);
-        vec3 landA = vec3(0.11, 0.28, 0.16);
-        vec3 landB = vec3(0.56, 0.46, 0.22);
-        vec3 ice = vec3(0.90, 0.96, 1.0);
-
-        vec3 base = mix(oceanDeep, oceanShallow, smoothstep(0.0, 0.8, land));
-        vec3 landCol = mix(landA, landB, fbm(uv*2.0));
-        base = mix(base, landCol, coast);
-
-        float lat = abs(N.y);
-        base = mix(base, ice, smoothstep(0.75, 0.96, lat));
-
-        float city = smoothstep(0.78, 0.95, fbm(uv*20.0 + 10.0)) * smoothstep(0.0,0.5,diff);
-        base += vec3(1.0, 0.72, 0.35) * city * 0.18;
-
-        float fres = pow(1.0 - max(dot(N,V), 0.0), 3.0);
-        vec3 atmos = vec3(0.10, 0.55, 1.0) * fres * 0.55;
-
-        vec3 color = base * (0.15 + 0.85*diff) + atmos;
-        color += vec3(0.05, 0.09, 0.16) * pow(max(dot(reflect(-L,N),V), 0.0), 16.0);
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
-
-    const colorVS = `
-      attribute vec3 aPos;
-      uniform mat4 uProj, uView, uModel;
-      uniform float uPointSize;
-      void main(){
-        gl_Position = uProj * uView * uModel * vec4(aPos, 1.0);
-        gl_PointSize = uPointSize;
-      }
-    `;
-
-    const colorFS = `
-      precision mediump float;
-      uniform vec4 uColor;
-      uniform int uPointSprite;
-      void main(){
-        vec4 c = uColor;
-        if(uPointSprite == 1){
-          vec2 p = gl_PointCoord * 2.0 - 1.0;
-          float d = dot(p,p);
-          if(d > 1.0) discard;
-          float a = smoothstep(1.0, 0.0, d);
-          c.a *= a;
-        }
-        gl_FragColor = c;
-      }
-    `;
-
-    const sphereProg = createProgram(sphereVS, earthFS);
-    const colorProg = createProgram(colorVS, colorFS);
-
-    function createSphere(latBands=48, lonBands=96, radius=1){
-      const pos=[], nor=[], uv=[], idx=[];
-      for(let y=0;y<=latBands;y++){
-        const v = y/latBands;
-        const theta = v*Math.PI;
-        const st = Math.sin(theta), ct = Math.cos(theta);
-        for(let x=0;x<=lonBands;x++){
-          const u = x/lonBands;
-          const phi = u*Math.PI*2;
-          const sp = Math.sin(phi), cp = Math.cos(phi);
-          const nx = cp*st, ny = ct, nz = sp*st;
-          pos.push(radius*nx, radius*ny, radius*nz);
-          nor.push(nx, ny, nz);
-          uv.push(u, 1-v);
-        }
-      }
-      for(let y=0;y<latBands;y++){
-        for(let x=0;x<lonBands;x++){
-          const i = y*(lonBands+1)+x;
-          const a=i,b=i+lonBands+1,c=i+1,d=i+lonBands+2;
-          idx.push(a,b,c, c,b,d);
-        }
-      }
-      return {
-        pos:new Float32Array(pos),
-        nor:new Float32Array(nor),
-        uv:new Float32Array(uv),
-        idx:new Uint16Array(idx)
-      };
-    }
-
-    function createBuffer(target, data, usage=gl.STATIC_DRAW){
-      const b = gl.createBuffer();
-      gl.bindBuffer(target, b);
-      gl.bufferData(target, data, usage);
-      return b;
-    }
-
-    const earthMesh = createSphere(56, 112, 1.0);
-    const earth = {
-      pos: createBuffer(gl.ARRAY_BUFFER, earthMesh.pos),
-      nor: createBuffer(gl.ARRAY_BUFFER, earthMesh.nor),
-      uv: createBuffer(gl.ARRAY_BUFFER, earthMesh.uv),
-      idx: createBuffer(gl.ELEMENT_ARRAY_BUFFER, earthMesh.idx),
-      count: earthMesh.idx.length
     };
 
-    const orbitSegments = 256;
-    const orbitVerts = new Float32Array((orbitSegments+1) * 3);
-    for(let i=0;i<=orbitSegments;i++){
-      const t = i/orbitSegments * Math.PI*2;
-      orbitVerts[i*3+0] = Math.cos(t);
-      orbitVerts[i*3+1] = 0;
-      orbitVerts[i*3+2] = Math.sin(t);
+    let earthBuilt = false;
+    setTimeout(() => { if (!earthBuilt) buildFallbackEarth(); }, 6000);
+
+    function switchBodyMaterial(bodyKey){
+      const cfg = BODY_URLS[bodyKey];
+      if (!cfg || !planetMesh) return;
+
+      setStatus("LOADING BODY…");
+
+      texLoader.load(
+        cfg.map,
+        (map) => {
+          map.colorSpace = THREE.SRGBColorSpace;
+
+          if (bodyKey === "earth" && cfg.normal && cfg.spec){
+            texLoader.load(
+              cfg.normal,
+              (normal) => {
+                texLoader.load(
+                  cfg.spec,
+                  (spec) => {
+                    planetMesh.material = new THREE.MeshPhongMaterial({
+                      map,
+                      normalMap: normal,
+                      specularMap: spec,
+                      specular: new THREE.Color(0x222222),
+                      shininess: 12
+                    });
+                    planetMesh.material.needsUpdate = true;
+                    earthBuilt = true;
+                    setStatus("READY");
+                  },
+                  undefined,
+                  () => { buildFallbackEarth(); setStatus("READY"); }
+                );
+              },
+              undefined,
+              () => { buildFallbackEarth(); setStatus("READY"); }
+            );
+          } else {
+            planetMesh.material = new THREE.MeshStandardMaterial({
+              map,
+              roughness: bodyKey === "jupiter" ? 0.95 : 1.0,
+              metalness: 0
+            });
+            planetMesh.material.needsUpdate = true;
+            earthBuilt = true;
+            setStatus("READY");
+          }
+        },
+        undefined,
+        (err) => {
+          console.error("Texture load failed:", bodyKey, err);
+          buildFallbackEarth();
+          setStatus("READY");
+        }
+      );
     }
-    const orbitBuffer = createBuffer(gl.ARRAY_BUFFER, orbitVerts);
 
-    const pointBuffer = createBuffer(gl.ARRAY_BUFFER, new Float32Array([0,0,0]));
+    // ---------- Satellites ----------
+    let sats = [];
+    let selected = null;
+    let earthLoadPromise = null;
+    let satMesh = null;
+    let trackLine = null;
+    let lastPosUpdateMs = 0;
 
-    function latLonToVec3(lat, lon, radius=1.02){
-      const la = lat * Math.PI/180;
-      const lo = lon * Math.PI/180;
-      const x = radius * Math.cos(la) * Math.cos(lo);
-      const y = radius * Math.sin(la);
-      const z = radius * Math.cos(la) * Math.sin(lo);
-      return v3(x,y,z);
+    let horizonsLoadPromise = null;
+
+    const SAT_POINT_RADIUS = 0.6;
+    const SAT_COLOR_DEFAULT = new THREE.Color(0x00E6FF);
+    const SAT_COLOR_SELECTED = new THREE.Color(0xFFCC33);
+
+    function ecefKmToScene(v){
+      return new THREE.Vector3(
+        v.x * SCALE,
+        v.z * SCALE,
+        -v.y * SCALE
+      );
     }
 
-    const satellites = [];
-    const groundStations = [
-      { name:'GS-Paris', lat:48.8566, lon:2.3522 },
-      { name:'GS-New York', lat:40.7128, lon:-74.0060 },
-      { name:'GS-Tokyo', lat:35.6762, lon:139.6503 },
-      { name:'GS-Sydney', lat:-33.8688, lon:151.2093 },
-      { name:'GS-Cairo', lat:30.0444, lon:31.2357 }
-    ];
+    // ---------- Horizons helpers ----------
+    function nowIsoUTC(){ return new Date().toISOString().slice(0,19); }
+    function addHoursIsoUTC(h){ return new Date(Date.now() + h*3600*1000).toISOString().slice(0,19); }
+    function toJulianForHorizons(date){ return date.getTime()/86400000 + 2440587.5; }
+    function lerp(a,b,t){ return a + (b-a)*t; }
 
-    const debris = Array.from({ length:18 }, (_,i) => {
-      const a = i/18 * Math.PI*2 + 0.3;
+    function parseHorizonsCsvVectors(text){
+      const start = text.indexOf("$$SOE");
+      const end   = text.indexOf("$$EOE");
+      if (start === -1 || end === -1 || end <= start) return [];
+
+      const block = text.slice(start + 5, end).trim();
+      const lines = block.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+      const out = [];
+      for (const line of lines){
+        const parts = line.split(",").map(s => s.trim());
+        if (parts.length < 7) continue;
+
+        const jd = Number(parts[0]);
+        const x  = Number(parts[1]);
+        const y  = Number(parts[2]);
+        const z  = Number(parts[3]);
+        const vx = Number(parts[4]);
+        const vy = Number(parts[5]);
+        const vz = Number(parts[6]);
+
+        if (![jd,x,y,z,vx,vy,vz].every(n => Number.isFinite(n))) continue;
+        out.push({ jd, x_km:x, y_km:y, z_km:z, vx_kms:vx, vy_kms:vy, vz_kms:vz });
+      }
+      return out;
+    }
+
+    function sampleVectorsAt(rows, jdNow){
+      if (!rows || rows.length < 2) return null;
+
+      let i = 0;
+      while (i < rows.length-2 && rows[i+1].jd < jdNow) i++;
+
+      const a = rows[i];
+      const b = rows[i+1];
+      const dt = (b.jd - a.jd);
+      if (!(dt > 0)) return null;
+
+      const t = (jdNow - a.jd) / dt;
       return {
-        altitude: 1.18 + (i%3)*0.05,
-        phase: a,
-        speed: 0.05 + (i%5)*0.01,
-        tiltX: (i%4-1.5)*0.25,
-        tiltY: (i%6-2.5)*0.18,
-        name: `DEBRIS-${String(i+1).padStart(2,'0')}`
+        x_km: lerp(a.x_km, b.x_km, t),
+        y_km: lerp(a.y_km, b.y_km, t),
+        z_km: lerp(a.z_km, b.z_km, t),
+        vx_kms: lerp(a.vx_kms, b.vx_kms, t),
+        vy_kms: lerp(a.vy_kms, b.vy_kms, t),
+        vz_kms: lerp(a.vz_kms, b.vz_kms, t),
       };
-    });
-
-    let selectedId = null;
-    let nextSatId = 1;
-
-    function randomInclination(){ return (Math.random()*80 - 40) * Math.PI/180; }
-    function randomRaan(){ return Math.random()*Math.PI*2; }
-
-    function makeSatellite(target){
-      const id = nextSatId++;
-      const altitude = 1.26 + Math.random()*0.1;
-      const speed = 0.22 + Math.random()*0.08;
-      const sat = {
-        id,
-        name: (ui.satelliteName.value || `HVRX-${id}`).trim() || `HVRX-${id}`,
-        targetLabel: target.label,
-        targetLat: target.lat,
-        targetLon: target.lon,
-        targetVec: latLonToVec3(target.lat, target.lon, 1.02),
-        duration: clamp(parseInt(ui.duration.value || '30', 10), 1, 240),
-        analysisType: ui.analysisType.value,
-        notes: (ui.notes.value || '').trim(),
-        altitude,
-        speed,
-        phase: Math.random()*Math.PI*2,
-        inclination: randomInclination(),
-        raan: randomRaan(),
-        launchedAt: performance.now()/1000,
-        status: 'Tracking'
-      };
-      satellites.push(sat);
-      selectedId = sat.id;
-      renderSatList();
-      updateSelectionInfo();
-      showToast(`${sat.name} launched toward ${target.label}`);
     }
 
-    function clearAllSatellites(){
-      satellites.length = 0;
-      selectedId = null;
-      renderSatList();
-      updateSelectionInfo();
-      showToast('All satellites cleared');
+    async function horizonsLookupBest(name){
+      const res = await fetch(`/api/lookup?s=${encodeURIComponent(name)}`);
+      if (!res.ok) throw new Error("Lookup HTTP " + res.status);
+      const data = await res.json();
+      const results = data?.result || [];
+      if (!results.length) return null;
+
+      const withSpk = results.find(r => r && r.spkid) || results[0];
+      return withSpk?.spkid ? withSpk : null;
     }
 
-    ui.launchBtn.addEventListener('click', () => {
-      if(satellites.length >= 2){
-        showToast('Maximum of 2 satellites already active');
-        return;
-      }
-      const target = resolveTarget();
-      if(!target.ok){
-        showToast(target.reason);
-        return;
-      }
-      makeSatellite(target);
-    });
+    async function horizonsVectorsRows(command, center, startIso, stopIso, stepMin){
+      const url =
+        `/api/vectors?command=${encodeURIComponent(command)}&center=${encodeURIComponent(center)}&start=${encodeURIComponent(startIso)}&stop=${encodeURIComponent(stopIso)}&stepMin=${encodeURIComponent(String(stepMin))}`;
 
-    ui.clearBtn.addEventListener('click', clearAllSatellites);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Vectors HTTP " + res.status);
+
+      const raw = await res.json();
+      const text = raw?.result || "";
+      return parseHorizonsCsvVectors(text);
+    }
+
+    function clearTrack(){
+      if (trackLine){
+        scene.remove(trackLine);
+        trackLine.geometry.dispose();
+        trackLine.material.dispose();
+        trackLine = null;
+      }
+    }
+
+    function buildHorizonsTrack(obj, minutesAhead = 360, stepMin = 5){
+      if (!obj?.rows?.length) return;
+
+      const pts = [];
+      const now = new Date();
+      const jd0 = toJulianForHorizons(now);
+
+      for (let m = 0; m <= minutesAhead; m += stepMin){
+        const jd = jd0 + (m / 1440);
+        const st = sampleVectorsAt(obj.rows, jd);
+        if (!st) continue;
+
+        const x = st.x_km * currentScale;
+        const y = st.z_km * currentScale;
+        const z = -st.y_km * currentScale;
+
+        pts.push(new THREE.Vector3(x, y, z));
+      }
+
+      if (pts.length < 2) return;
+
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineBasicMaterial({ color: 0xFFCC33, transparent:true, opacity:0.85 });
+      trackLine = new THREE.Line(geo, mat);
+      trackLine.userData.last = performance.now();
+      scene.add(trackLine);
+    }
+
+    // tiny concurrency limiter for Horizons loads
+    async function mapLimit(arr, limit, fn){
+      const results = new Array(arr.length);
+      let idx = 0;
+
+      async function worker(){
+        while (idx < arr.length){
+          const i = idx++;
+          try { results[i] = await fn(arr[i], i); }
+          catch (e) { results[i] = { __error: e }; }
+        }
+      }
+
+      const workers = [];
+      for (let k=0; k<Math.max(1, limit); k++) workers.push(worker());
+      await Promise.all(workers);
+      return results;
+    }
+
+    async function loadBodyHorizons(body){
+      if (horizonsLoadPromise) return horizonsLoadPromise;
+
+      horizonsLoadPromise = (async () => {
+        const center = BODY_CENTER[body];
+        const craftList = BODY_CRAFT[body] || [];
+
+        clearAll();
+        setSelectedName("—");
+        selected = null;
+        clearTrack();
+
+        if (!center || !craftList.length){
+          catalogNoteEl.textContent = "Catalog: " + body + " (not wired)";
+          setStatus("READY");
+          launchOut.value =
+            "Selected body: " + body +
+            "\n\nNo Horizons spacecraft list configured for this body.\n";
+          return;
+        }
+
+        setStatus("LOADING CATALOG…");
+        catalogNoteEl.textContent = "Catalog: " + body + " / Horizons (loading…)";
+
+        const start = nowIsoUTC();
+        const stop  = addHoursIsoUTC(12); // 12h ahead
+        const stepMin = 2;                // 2-minute samples
+
+        // Lookup SPKIDs (prefer provided spkid)
+        const lookedUp = await mapLimit(craftList, 4, async (c) => {
+          if (c?.spkid) return { displayName: (c.name || c.query || String(c.spkid)), spkid: String(c.spkid) };
+          const r = await horizonsLookupBest(c.query || c.name);
+          if (!r?.spkid) return null;
+          return { displayName: (c.name || r.name || c.query), spkid: String(r.spkid) };
+        });
+
+        const resolved = lookedUp.filter(Boolean);
+
+        // Fetch vectors
+        const craft = await mapLimit(resolved, 3, async (obj) => {
+          const rows = await horizonsVectorsRows(obj.spkid, center, start, stop, stepMin);
+          if (!rows || rows.length < 2) return null;
+          return { name: obj.displayName, norad: obj.spkid, rows, meshIndex: -1 };
+        });
+
+        sats = craft.filter(Boolean);
+
+        buildSatInstancedMesh(sats.length);
+        updateSatCount(sats.length);
+        catalogNoteEl.textContent = `Catalog: ${body} / Horizons (${sats.length} objects)`;
+        setStatus("READY");
+        renderSatList();
+
+        if (!sats.length){
+          launchOut.value =
+            `Selected body: ${body}\n\n` +
+            "Horizons returned 0 usable objects from the current list.\n" +
+            "This usually means the lookup names didn’t resolve.\n" +
+            "Fix by switching entries to explicit {spkid:\"...\"} once confirmed.\n";
+        }
+      })();
+
+      horizonsLoadPromise.finally(() => { horizonsLoadPromise = null; });
+      return horizonsLoadPromise;
+    }
+
+    // ---------- TLE parsing ----------
+    function parseTleText(text){
+      const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+      const out = [];
+      for (let i=0;i<lines.length-2;i++){
+        const name = lines[i];
+        const l1 = lines[i+1];
+        const l2 = lines[i+2];
+        if (l1.startsWith("1 ") && l2.startsWith("2 ")){
+          const norad = l1.slice(2,7).trim();
+          out.push({ name, norad, l1, l2 });
+          i += 2;
+        }
+      }
+      return out;
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function buildSatInstancedMesh(n){
+      if (satMesh){
+        scene.remove(satMesh);
+        satMesh.geometry.dispose();
+        satMesh.material.dispose();
+      }
+      const geom = new THREE.SphereGeometry(SAT_POINT_RADIUS, 10, 10);
+      const mat  = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      satMesh = new THREE.InstancedMesh(geom, mat, Math.max(1, n));
+      satMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      satMesh.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(Math.max(1, n)*3), 3);
+      satMesh.instanceColor.setUsage(THREE.DynamicDrawUsage);
+
+      const m = new THREE.Matrix4();
+      for (let i=0;i<n;i++){
+        m.makeTranslation(99999,99999,99999);
+        satMesh.setMatrixAt(i, m);
+        satMesh.setColorAt(i, SAT_COLOR_DEFAULT);
+        sats[i].meshIndex = i;
+      }
+      satMesh.instanceMatrix.needsUpdate = true;
+      satMesh.instanceColor.needsUpdate = true;
+
+      scene.add(satMesh);
+    }
 
     function renderSatList(){
-      const items = [];
-      satellites.forEach(s => {
-        items.push(`
-          <div class="satItem" data-id="${s.id}">
-            <div>
-              <div class="satName">${escapeHtml(s.name)}</div>
-              <div style="font-size:11px;color:rgba(159,179,217,.92);margin-top:4px;">${escapeHtml(s.targetLabel)} • ${escapeHtml(s.analysisType)}</div>
-            </div>
-            <div class="pill">${selectedId === s.id ? 'Focused' : 'Active'}</div>
-          </div>
-        `);
-      });
-      debris.slice(0, 6).forEach((d, idx) => {
-        items.push(`
-          <div class="satItem" data-debris="${idx}">
-            <div>
-              <div class="satName">${escapeHtml(d.name)}</div>
-              <div style="font-size:11px;color:rgba(159,179,217,.92);margin-top:4px;">Orbital debris object</div>
-            </div>
-            <div class="pill">Caution</div>
-          </div>
-        `);
-      });
-      if(!items.length){
-        ui.satList.innerHTML = `<div class="note" style="margin-top:0;">No satellites deployed yet. Launch one to populate the orbital view.</div>`;
+      const q = (searchEl.value || "").trim().toLowerCase();
+      const matches = [];
+      for (const s of sats){
+        if (!q || s.name.toLowerCase().includes(q) || String(s.norad).includes(q)) matches.push(s);
+        if (matches.length >= 80) break;
+      }
+      satListEl.innerHTML = "";
+      for (const s of matches){
+        const row = document.createElement("div");
+        row.className = "satItem";
+        row.innerHTML = `<div class="satName">${escapeHtml(s.name)} <span style="color:rgba(159,179,217,.8);font-weight:700">(${escapeHtml(String(s.norad))})</span></div><div class="pill">TRACK</div>`;
+        row.addEventListener("click", () => selectSatByNorad(String(s.norad)));
+        satListEl.appendChild(row);
+      }
+    }
+
+    function setAllColorsDefault(){
+      if (!satMesh) return;
+      for (let i=0;i<sats.length;i++) satMesh.setColorAt(i, SAT_COLOR_DEFAULT);
+      satMesh.instanceColor.needsUpdate = true;
+    }
+
+    function selectSatByNorad(norad){
+      const s = sats.find(x => String(x.norad) === String(norad)) || null;
+      selected = s;
+      setSelectedName(s ? s.name : "—");
+
+      if (satMesh){
+        setAllColorsDefault();
+        if (s){
+          satMesh.setColorAt(s.meshIndex, SAT_COLOR_SELECTED);
+          satMesh.instanceColor.needsUpdate = true;
+        }
+      }
+
+      clearTrack();
+
+      // Earth TLE track
+      if (s && s.satrec && satellite) {
+        buildSelectedTrack(s, 90, 2);
+      }
+      // Horizons track (Moon/Mars/Jupiter)
+      else if (s && s.rows) {
+        buildHorizonsTrack(s, 360, 5);
+      }
+    }
+
+    function buildSelectedTrack(sat, minutesAhead=90, stepMin=2){
+      const pts = [];
+      const now = new Date();
+      for (let m=0; m<=minutesAhead; m+=stepMin){
+        const t = new Date(now.getTime() + m*60*1000);
+        const pv = satellite.propagate(sat.satrec, t);
+        if (!pv.position) continue;
+        const gmst = satellite.gstime(t);
+        const ecef = satellite.eciToEcf(pv.position, gmst);
+        pts.push(ecefKmToScene(ecef));
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineBasicMaterial({ color: 0xFFCC33, transparent:true, opacity:0.85 });
+      trackLine = new THREE.Line(geo, mat);
+      trackLine.userData.last = performance.now();
+      scene.add(trackLine);
+    }
+
+    function updateSatPositions(){
+      if (!satMesh || !sats.length) return;
+
+      // Earth TLE path
+      if (satellite && sats[0]?.satrec){
+        const t = new Date();
+        const gmst = satellite.gstime(t);
+
+        const mat4 = new THREE.Matrix4();
+        for (let i=0;i<sats.length;i++){
+          const s = sats[i];
+          const pv = satellite.propagate(s.satrec, t);
+          if (!pv.position){
+            mat4.makeTranslation(99999,99999,99999);
+            satMesh.setMatrixAt(i, mat4);
+            continue;
+          }
+          const ecef = satellite.eciToEcf(pv.position, gmst);
+          const p = ecefKmToScene(ecef);
+          mat4.makeTranslation(p.x, p.y, p.z);
+          satMesh.setMatrixAt(i, mat4);
+        }
+        satMesh.instanceMatrix.needsUpdate = true;
+
+        if (selected){
+          const pv = satellite.propagate(selected.satrec, t);
+          if (pv.position && pv.velocity){
+            const geo = satellite.eciToGeodetic(pv.position, gmst);
+            infoLat.textContent = satellite.degreesLat(geo.latitude).toFixed(2);
+            infoLon.textContent = satellite.degreesLong(geo.longitude).toFixed(2);
+            infoAlt.textContent = geo.height.toFixed(1);
+            const v = pv.velocity;
+            const spd = Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+            infoSpd.textContent = spd.toFixed(3);
+            infoUtc.textContent = t.toISOString().replace("T"," ").slice(0,19) + "Z";
+          }
+        } else {
+          infoLat.textContent = infoLon.textContent = infoAlt.textContent = infoSpd.textContent = infoUtc.textContent = "—";
+        }
         return;
       }
-      ui.satList.innerHTML = items.join('');
-      Array.from(ui.satList.querySelectorAll('.satItem[data-id]')).forEach(el => {
-        el.addEventListener('click', () => {
-          selectedId = Number(el.dataset.id);
-          renderSatList();
-          updateSelectionInfo();
+
+      // Horizons path
+      const jdNow = toJulianForHorizons(new Date());
+      const mat4 = new THREE.Matrix4();
+
+      for (let i=0;i<sats.length;i++){
+        const s = sats[i];
+        const st = sampleVectorsAt(s.rows, jdNow);
+        if (!st){
+          mat4.makeTranslation(99999,99999,99999);
+          satMesh.setMatrixAt(i, mat4);
+          continue;
+        }
+
+        const x = st.x_km * currentScale;
+        const y = st.z_km * currentScale;
+        const z = -st.y_km * currentScale;
+
+        mat4.makeTranslation(x, y, z);
+        satMesh.setMatrixAt(i, mat4);
+      }
+
+      satMesh.instanceMatrix.needsUpdate = true;
+
+      if (selected){
+        const st = sampleVectorsAt(selected.rows, jdNow);
+        if (st){
+          const r = Math.sqrt(st.x_km*st.x_km + st.y_km*st.y_km + st.z_km*st.z_km);
+          const lat = Math.asin(st.z_km / r) * 180/Math.PI;
+          const lon = Math.atan2(st.y_km, st.x_km) * 180/Math.PI;
+          const bodyR = BODY_RADIUS_KM[currentBody] || EARTH_KM;
+          const alt = r - bodyR;
+
+          const spd = Math.sqrt(st.vx_kms*st.vx_kms + st.vy_kms*st.vy_kms + st.vz_kms*st.vz_kms);
+
+          infoLat.textContent = lat.toFixed(2);
+          infoLon.textContent = lon.toFixed(2);
+          infoAlt.textContent = alt.toFixed(1);
+          infoSpd.textContent = spd.toFixed(3);
+          infoUtc.textContent = new Date().toISOString().replace("T"," ").slice(0,19) + "Z";
+        }
+      } else {
+        infoLat.textContent = infoLon.textContent = infoAlt.textContent = infoSpd.textContent = infoUtc.textContent = "—";
+      }
+    }
+
+    async function loadEarthActive(){
+      if (earthLoadPromise) return earthLoadPromise;
+
+      earthLoadPromise = (async () => {
+        if (!satellite){
+          setStatus("SAT DISABLED");
+          alert("satellite.js is not loaded, so satellites are disabled.");
+          return;
+        }
+
+        setStatus("LOADING CATALOG…");
+        setSelectedName("—");
+        selected = null;
+        clearTrack();
+
+        const url = "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle";
+
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 20000);
+
+        let res;
+        try {
+          res = await fetch(url, { cache: "no-store", signal: ctrl.signal });
+        } finally {
+          clearTimeout(timer);
+        }
+
+        if (!res.ok) throw new Error("Catalog HTTP " + res.status);
+
+        const text = await res.text();
+        const items = parseTleText(text);
+
+        sats = items.map(it => {
+          const sr = satellite.twoline2satrec(it.l1, it.l2);
+          const inclDeg = sr.inclo * 180 / Math.PI;
+          return { name: it.name, norad: it.norad, satrec: sr, inclDeg, meshIndex: -1 };
         });
-      });
+
+        buildSatInstancedMesh(sats.length);
+        updateSatCount(sats.length);
+        catalogNoteEl.textContent = "Catalog: Earth / active (" + sats.length + " objects)";
+        setStatus("READY");
+        renderSatList();
+      })();
+
+      earthLoadPromise.finally(() => { earthLoadPromise = null; });
+      return earthLoadPromise;
     }
 
-    function updateSelectionInfo(){
-      const selected = satellites.find(s => s.id === selectedId);
-      if(!selected){
-        ui.selectedInfo.innerHTML = `
-          <div class="infoRow"><span class="infoK">Selection</span><span class="infoV">None</span></div>
-          <div class="infoRow"><span class="infoK">Mode</span><span class="infoV">Idle</span></div>
-          <div class="infoRow"><span class="infoK">Target</span><span class="infoV">—</span></div>
-        `;
+    function clearAll(){
+      setStatus("READY");
+      sats = [];
+      selected = null;
+      updateSatCount(0);
+      setSelectedName("—");
+      catalogNoteEl.textContent = "Catalog: —";
+      satListEl.innerHTML = "";
+      clearTrack();
+      if (satMesh){
+        scene.remove(satMesh);
+        satMesh.geometry.dispose();
+        satMesh.material.dispose();
+        satMesh = null;
+      }
+    }
+
+    function onBodyChange(){
+      const body = bodySelectEl.value;
+
+      currentBody = body;
+      currentScale = R / (BODY_RADIUS_KM[currentBody] || EARTH_KM);
+
+      switchBodyMaterial(body);
+
+      if (body === "earth"){
+        catalogNoteEl.textContent = "Catalog: Earth / active (loading…)";
+        setStatus("LOADING…");
+
+        loadEarthActive().catch(e => {
+          setStatus("ERROR");
+          alert(String(e));
+        });
+
         return;
       }
-      ui.selectedInfo.innerHTML = `
-        <div class="infoRow"><span class="infoK">Selection</span><span class="infoV">${escapeHtml(selected.name)}</span></div>
-        <div class="infoRow"><span class="infoK">Mode</span><span class="infoV">${escapeHtml(selected.analysisType)}</span></div>
-        <div class="infoRow"><span class="infoK">Target</span><span class="infoV">${escapeHtml(selected.targetLabel)}</span></div>
-        <div class="infoRow"><span class="infoK">Duration</span><span class="infoV">${selected.duration} min</span></div>
-      `;
+
+      loadBodyHorizons(body).catch(e => {
+        setStatus("ERROR");
+        console.error(e);
+        alert(String(e));
+      });
     }
 
-    function escapeHtml(str){
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+    function computeLaunchOverview(){
+      // ---- helpers ----
+      const rad = (d) => d * Math.PI / 180;
+      const deg = (r) => r * 180 / Math.PI;
+      const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
 
-    renderSatList();
-    updateSelectionInfo();
-
-    const camera = {
-      yaw: 0.6,
-      pitch: 0.35,
-      distance: 3.2,
-      targetYaw: 0.6,
-      targetPitch: 0.35,
-      targetDistance: 3.2,
-      followStrength: 0.06
-    };
-
-    function resetGlobeView(){
-      camera.targetYaw = 0.6;
-      camera.targetPitch = 0.35;
-      camera.targetDistance = 3.2;
-      showToast('Globe view reset');
-    }
-
-    let globeMode = false;
-    ui.openGlobeBtn.addEventListener('click', () => {
-      globeMode = true;
-      document.body.classList.add('globe-mode');
-      ui.openGlobeBtn.classList.add('hidden');
-      ui.backToPlatformBtn.classList.remove('hidden');
-      ui.resetGlobeBtn.classList.remove('hidden');
-      showToast('Globe view enabled');
-    });
-    ui.backToPlatformBtn.addEventListener('click', () => {
-      globeMode = false;
-      document.body.classList.remove('globe-mode');
-      ui.openGlobeBtn.classList.remove('hidden');
-      ui.backToPlatformBtn.classList.add('hidden');
-      ui.resetGlobeBtn.classList.add('hidden');
-      showToast('Platform controls restored');
-    });
-    ui.resetGlobeBtn.addEventListener('click', resetGlobeView);
-
-    function canInteractWithGlobe(){
-      return !isMobile() || globeMode;
-    }
-
-    let dragging = false;
-    let lastX = 0;
-    let lastY = 0;
-    let pinchDist = 0;
-
-    canvas.addEventListener('pointerdown', (e) => {
-      if(!canInteractWithGlobe()) return;
-      dragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      canvas.setPointerCapture?.(e.pointerId);
-    });
-    canvas.addEventListener('pointermove', (e) => {
-      if(!dragging || !canInteractWithGlobe()) return;
-      const dx = e.clientX - lastX;
-      const dy = e.clientY - lastY;
-      lastX = e.clientX;
-      lastY = e.clientY;
-      camera.targetYaw += dx * 0.005;
-      camera.targetPitch += dy * 0.005;
-      camera.targetPitch = clamp(camera.targetPitch, -1.35, 1.35);
-    });
-    const stopDragging = (e) => {
-      dragging = false;
-      if(e && canvas.releasePointerCapture){
-        try{ canvas.releasePointerCapture(e.pointerId); }catch{}
+      function parseLatLon(text){
+        const parts = String(text).split(",").map(s => s.trim());
+        if (parts.length !== 2) throw new Error("Launch site must be 'lat,lon'");
+        const lat = Number(parts[0]);
+        const lon = Number(parts[1]);
+        if (!isFinite(lat) || !isFinite(lon)) throw new Error("Launch site lat/lon must be numbers");
+        if (lat < -90 || lat > 90) throw new Error("Latitude must be between -90 and 90");
+        if (lon < -180 || lon > 180) throw new Error("Longitude must be between -180 and 180");
+        return { lat, lon };
       }
-    };
-    canvas.addEventListener('pointerup', stopDragging);
-    canvas.addEventListener('pointercancel', stopDragging);
-    canvas.addEventListener('wheel', (e) => {
-      if(!canInteractWithGlobe()) return;
-      e.preventDefault();
-      camera.targetDistance += e.deltaY * 0.002;
-      camera.targetDistance = clamp(camera.targetDistance, 1.8, 6.0);
-    }, { passive:false });
 
-    canvas.addEventListener('touchstart', (e) => {
-      if(!canInteractWithGlobe()) return;
-      if(e.touches.length === 2){
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        pinchDist = Math.hypot(dx, dy);
+      // Julian day
+      function toJulian(date){
+        return date.getTime()/86400000 + 2440587.5;
       }
-    }, { passive:true });
-    canvas.addEventListener('touchmove', (e) => {
-      if(!canInteractWithGlobe()) return;
-      if(e.touches.length === 2){
-        e.preventDefault();
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        const d = Math.hypot(dx, dy);
-        if(pinchDist){
-          camera.targetDistance += (pinchDist - d) * 0.01;
-          camera.targetDistance = clamp(camera.targetDistance, 1.8, 6.0);
+
+      // Approx solar elevation (deg) at given lat/lon/time
+      function solarElevationDeg(date, latDeg, lonDeg){
+        const jd = toJulian(date);
+        const n = jd - 2451545.0;
+
+        const L = (280.460 + 0.9856474 * n) % 360;
+        const g = rad((357.528 + 0.9856003 * n) % 360);
+
+        const lambda = rad((L + 1.915*Math.sin(g) + 0.020*Math.sin(2*g)) % 360);
+
+        const eps = rad(23.439 - 0.0000004 * n);
+
+        const sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
+        const sinEps = Math.sin(eps), cosEps = Math.cos(eps);
+
+        const alpha = Math.atan2(cosEps*sinLambda, cosLambda);
+        const delta = Math.asin(sinEps*sinLambda);
+
+        const T = (jd - 2451545.0)/36525.0;
+        let GMST = 280.46061837 + 360.98564736629*(jd - 2451545.0) + 0.000387933*T*T - (T*T*T)/38710000.0;
+        GMST = ((GMST % 360) + 360) % 360;
+
+        const LST = rad(((GMST + lonDeg) % 360 + 360) % 360);
+        const H = LST - alpha;
+
+        const lat = rad(latDeg);
+        const sinEl = Math.sin(lat)*Math.sin(delta) + Math.cos(lat)*Math.cos(delta)*Math.cos(H);
+        return deg(Math.asin(clamp(sinEl, -1, 1)));
+      }
+
+      function classifyLight(elDeg){
+        if (elDeg > 0) return "DAY";
+        if (elDeg > -6) return "CIVIL TWILIGHT";
+        if (elDeg > -12) return "NAUTICAL TWILIGHT";
+        if (elDeg > -18) return "ASTRO TWILIGHT";
+        return "NIGHT";
+      }
+
+      // ---- inputs ----
+      let site, incDeg, altKm;
+      try {
+        site = parseLatLon(launchLatLon.value);
+        incDeg = Number(targetIncEl.value);
+        altKm = Number(targetAltEl.value);
+        if (!isFinite(incDeg) || incDeg <= 0 || incDeg >= 180) throw new Error("Inclination must be between 0 and 180 deg");
+        if (!isFinite(altKm) || altKm < 120 || altKm > 50000) throw new Error("Altitude must be a reasonable value in km (e.g., 120–50000)");
+      } catch (e){
+        launchOut.value = "INPUT ERROR:\n" + String(e.message || e);
+        return;
+      }
+
+      const latAbs = Math.abs(site.lat);
+
+      let reachable = incDeg >= latAbs && incDeg <= (180 - latAbs);
+      let azPrograde = null;
+      let azRetrograde = null;
+
+      if (reachable){
+        const phi = rad(site.lat);
+        const i = rad(incDeg);
+        const ratio = clamp(Math.cos(i)/Math.cos(phi), -1, 1);
+        const Az = Math.asin(ratio);
+        azPrograde = (deg(Az) + 360) % 360;
+        azRetrograde = (180 - azPrograde + 360) % 360;
+      }
+
+      const MU = 398600.4418;
+      const r = EARTH_KM + altKm;
+      const vOrb = Math.sqrt(MU / r);
+      const vRotEq = 0.465101;
+      const vRot = vRotEq * Math.cos(rad(site.lat));
+
+      let assistPro = null, assistRetro = null;
+      if (reachable){
+        const eastComponentPro = Math.sin(rad(azPrograde));
+        assistPro = vRot * eastComponentPro;
+        const eastComponentRetro = Math.sin(rad(azRetrograde));
+        assistRetro = vRot * eastComponentRetro;
+      }
+
+      let congestionText = "Congestion: (sat catalog not loaded)";
+      if (satellite && sats && sats.length && sats[0]?.satrec){
+        const now = new Date();
+        const gmst = satellite.gstime(now);
+        const incTol = 2.0;
+        const altTol = 50.0;
+
+        let inBand = 0;
+        for (const s of sats){
+          if (Math.abs((s.inclDeg ?? 0) - incDeg) > incTol) continue;
+          const pv = satellite.propagate(s.satrec, now);
+          if (!pv.position) continue;
+          const geo = satellite.eciToGeodetic(pv.position, gmst);
+          const h = geo.height;
+          if (Math.abs(h - altKm) <= altTol) inBand++;
         }
-        pinchDist = d;
+
+        const pct = (inBand / sats.length) * 100;
+        congestionText = `Congestion: ${inBand} sats within ±${incTol}° incl and ±${altTol} km alt (${pct.toFixed(2)}% of loaded catalog)`;
       }
-    }, { passive:false });
-    canvas.addEventListener('touchend', () => { pinchDist = 0; }, { passive:true });
 
-    gl.enable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      const start = new Date();
+      const stepMin = 30;
+      const steps = Math.floor((24 * 60) / stepMin);
 
-    function bindAttrib(program, name, buffer, size){
-      const loc = gl.getAttribLocation(program, name);
-      if(loc < 0) return;
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, 0);
+      let lines = [];
+      lines.push("LAUNCH WINDOW OVERVIEW (UTC)");
+      lines.push("------------------------------------------------------------");
+      lines.push(`Site: lat ${site.lat.toFixed(4)}, lon ${site.lon.toFixed(4)}`);
+      lines.push(`Target: inc ${incDeg.toFixed(2)}°, alt ${altKm.toFixed(0)} km`);
+      lines.push("");
+
+      if (!reachable){
+        lines.push("REACHABILITY: ❌ NOT DIRECTLY REACHABLE from this latitude");
+        lines.push(`Rule of thumb: inclination must be ≥ |latitude|. Here |lat|=${latAbs.toFixed(2)}°`);
+        lines.push("You would need a dogleg, plane change, or a different site.");
+      } else {
+        lines.push("REACHABILITY: ✅ DIRECTLY REACHABLE");
+        lines.push(`Suggested azimuths (from North → East):`);
+        lines.push(`  Prograde:   ${azPrograde.toFixed(1)}°   (rotation assist ~ ${assistPro.toFixed(3)} km/s)`);
+        lines.push(`  Retrograde: ${azRetrograde.toFixed(1)}°   (rotation assist ~ ${assistRetro.toFixed(3)} km/s)`);
+      }
+
+      lines.push("");
+      lines.push(`Orbital speed @ ${altKm.toFixed(0)} km (circular): ~${vOrb.toFixed(3)} km/s`);
+      lines.push(congestionText);
+      lines.push("");
+
+      lines.push("NEXT 24 HOURS (lighting at site):");
+      lines.push("Time (UTC)            SunEl   Condition            Go/Note");
+      lines.push("------------------------------------------------------------");
+
+      for (let k=0; k<=steps; k++){
+        const t = new Date(start.getTime() + k*stepMin*60*1000);
+        const elv = solarElevationDeg(t, site.lat, site.lon);
+        const cond = classifyLight(elv);
+
+        let go = "NO";
+        let note = "";
+        if (reachable){
+          if (cond === "NIGHT" || cond.includes("TWILIGHT")) { go = "GO"; note = "better visuals/ops"; }
+          else { go = "CAUTION"; note = "daylight"; }
+        } else {
+          note = "inclination not reachable";
+        }
+
+        const ts = t.toISOString().replace("T"," ").slice(0,16) + "Z";
+        lines.push(`${ts}   ${elv.toFixed(1).padStart(5)}°  ${cond.padEnd(18)}  ${go} ${note}`);
+      }
+
+      launchOut.value = lines.join("\n");
     }
 
-    function drawEarth(time, proj, view){
-      gl.useProgram(sphereProg);
-      bindAttrib(sphereProg, 'aPos', earth.pos, 3);
-      bindAttrib(sphereProg, 'aNormal', earth.nor, 3);
-      bindAttrib(sphereProg, 'aUv', earth.uv, 2);
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, earth.idx);
-      const uProj = gl.getUniformLocation(sphereProg, 'uProj');
-      const uView = gl.getUniformLocation(sphereProg, 'uView');
-      const uModel = gl.getUniformLocation(sphereProg, 'uModel');
-      const uCam = gl.getUniformLocation(sphereProg, 'uCam');
-      const uTime = gl.getUniformLocation(sphereProg, 'uTime');
-      const model = mat4RotateY(time * 0.04);
-      gl.uniformMatrix4fv(uProj, false, proj);
-      gl.uniformMatrix4fv(uView, false, view);
-      gl.uniformMatrix4fv(uModel, false, model);
-      gl.uniform3fv(uCam, currentCameraPos);
-      gl.uniform1f(uTime, time);
-      gl.drawElements(gl.TRIANGLES, earth.count, gl.UNSIGNED_SHORT, 0);
-    }
+    // Wire UI
+    el("clearBtn").addEventListener("click", clearAll);
+    el("launchBtn").addEventListener("click", computeLaunchOverview);
 
-    function useColorProgram(proj, view, model, color, pointSize=6, pointSprite=0){
-      gl.useProgram(colorProg);
-      gl.uniformMatrix4fv(gl.getUniformLocation(colorProg, 'uProj'), false, proj);
-      gl.uniformMatrix4fv(gl.getUniformLocation(colorProg, 'uView'), false, view);
-      gl.uniformMatrix4fv(gl.getUniformLocation(colorProg, 'uModel'), false, model);
-      gl.uniform4fv(gl.getUniformLocation(colorProg, 'uColor'), color);
-      gl.uniform1f(gl.getUniformLocation(colorProg, 'uPointSize'), pointSize);
-      gl.uniform1i(gl.getUniformLocation(colorProg, 'uPointSprite'), pointSprite);
-    }
+    el("downloadLaunchBtn").addEventListener("click", () => {
+      const txt = (launchOut.value || "").trim();
+      if (!txt){
+        alert("No launch overview yet. Click Compute Launch Window Overview first.");
+        return;
+      }
+      const stamp = new Date().toISOString().replace(/[:.]/g,"-");
+      downloadText(`launch-overview-${stamp}.txt`, txt + "\n");
+    });
 
-    function drawOrbit(radius, tiltX, tiltY, proj, view, color){
-      bindAttrib(colorProg, 'aPos', orbitBuffer, 3);
-      const model = mat4Mul(mat4RotateY(tiltY), mat4Mul(mat4RotateX(tiltX), mat4Scale(radius, radius, radius)));
-      useColorProgram(proj, view, model, color, 1, 0);
-      gl.drawArrays(gl.LINE_STRIP, 0, orbitSegments + 1);
-    }
+    searchEl.addEventListener("input", renderSatList);
+    bodySelectEl.addEventListener("change", onBodyChange);
 
-    function drawPoint(pos, scale, proj, view, color, pointSize=8){
-      bindAttrib(colorProg, 'aPos', pointBuffer, 3);
-      const model = mat4Mul(mat4Translate(pos), mat4Scale(scale, scale, scale));
-      useColorProgram(proj, view, model, color, pointSize, 1);
-      gl.drawArrays(gl.POINTS, 0, 1);
-    }
+    // Load initial body
+    if (!planetMesh) buildFallbackEarth();
+    switchBodyMaterial(bodySelectEl.value);
+    onBodyChange();
 
-    function satPosition(sat, time){
-      const t = time - sat.launchedAt;
-      const ang = sat.phase + t * sat.speed;
-      const p = v3(Math.cos(ang) * sat.altitude, 0, Math.sin(ang) * sat.altitude);
-      const rx = sat.inclination;
-      const ry = sat.raan;
-      const cx = Math.cos(rx), sx = Math.sin(rx);
-      const cy = Math.cos(ry), sy = Math.sin(ry);
-      let x = p[0], y = p[1], z = p[2];
-      const y1 = y*cx - z*sx;
-      const z1 = y*sx + z*cx;
-      const x2 = x*cy + z1*sy;
-      const z2 = -x*sy + z1*cy;
-      return v3(x2, y1, z2);
-    }
+    // Animate loop
+    function animate(){
+      const nowMs = performance.now();
+      if (nowMs - lastPosUpdateMs > 1000){
+        updateSatPositions();
+        lastPosUpdateMs = nowMs;
 
-    function debrisPosition(d, time){
-      const ang = d.phase + time * d.speed;
-      const p = v3(Math.cos(ang) * d.altitude, 0, Math.sin(ang) * d.altitude);
-      const cx = Math.cos(d.tiltX), sx = Math.sin(d.tiltX);
-      const cy = Math.cos(d.tiltY), sy = Math.sin(d.tiltY);
-      let x = p[0], y = p[1], z = p[2];
-      const y1 = y*cx - z*sx;
-      const z1 = y*sx + z*cx;
-      const x2 = x*cy + z1*sy;
-      const z2 = -x*sy + z1*cy;
-      return v3(x2, y1, z2);
-    }
+        // Refresh Earth track
+        if (satellite && selected && trackLine && selected?.satrec && (nowMs - (trackLine.userData.last || 0) > 10000)){
+          clearTrack();
+          buildSelectedTrack(selected, 90, 2);
+        }
 
-    let currentCameraPos = v3(0,0,3.2);
-
-    function animate(ts){
-      const time = ts / 1000;
-
-      if(selectedId){
-        const sat = satellites.find(s => s.id === selectedId);
-        if(sat){
-          const pos = satPosition(sat, time);
-          const desiredYaw = Math.atan2(pos[2], pos[0]) - Math.PI/2;
-          const desiredPitch = clamp(Math.asin(pos[1] / len(pos)) * 0.4, -0.8, 0.8);
-          camera.targetYaw = mix(camera.targetYaw, desiredYaw, camera.followStrength);
-          camera.targetPitch = mix(camera.targetPitch, desiredPitch, camera.followStrength);
-          camera.targetDistance = mix(camera.targetDistance, 2.8, camera.followStrength * 0.35);
+        // Refresh Horizons track
+        if (selected && selected?.rows && trackLine && !selected?.satrec && (nowMs - (trackLine.userData.last || 0) > 10000)){
+          clearTrack();
+          buildHorizonsTrack(selected, 360, 5);
         }
       }
-
-      camera.yaw = mix(camera.yaw, camera.targetYaw, 0.14);
-      camera.pitch = mix(camera.pitch, camera.targetPitch, 0.14);
-      camera.distance = mix(camera.distance, camera.targetDistance, 0.12);
-
-      const aspect = canvas.width / Math.max(1, canvas.height);
-      const proj = mat4Perspective(Math.PI/3, aspect, 0.01, 50.0);
-      const cp = Math.cos(camera.pitch), sp = Math.sin(camera.pitch);
-      const cy = Math.cos(camera.yaw), sy = Math.sin(camera.yaw);
-      currentCameraPos = v3(
-        camera.distance * cp * cy,
-        camera.distance * sp,
-        camera.distance * cp * sy
-      );
-      const view = mat4LookAt(currentCameraPos, v3(0,0,0), v3(0,1,0));
-
-      gl.clearColor(0,0,0,1);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-      drawEarth(time, proj, view);
-
-      groundStations.forEach(gs => {
-        drawPoint(latLonToVec3(gs.lat, gs.lon, 1.02), 1, proj, view, [0.0, 0.9, 1.0, 1.0], isMobile() ? 9 : 11);
-      });
-
-      satellites.forEach(s => {
-        drawOrbit(s.altitude, s.inclination, s.raan, proj, view, [0.48, 0.36, 1.0, 0.45]);
-        const p = satPosition(s, time);
-        const isSelected = s.id === selectedId;
-        drawPoint(p, 1, proj, view, isSelected ? [1.0, 0.8, 0.2, 1.0] : [0.48, 0.36, 1.0, 1.0], isSelected ? 14 : 11);
-        drawPoint(s.targetVec, 1, proj, view, [0.0, 0.9, 1.0, 0.7], 8);
-      });
-
-      debris.forEach(d => {
-        drawOrbit(d.altitude, d.tiltX, d.tiltY, proj, view, [1.0, 0.78, 0.2, 0.16]);
-        drawPoint(debrisPosition(d, time), 1, proj, view, [1.0, 0.78, 0.2, 0.85], 6);
-      });
-
+      controls.update();
+      renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
+
+    function resizeScene() {
+      const viewport = getViewport();
+      renderer.setPixelRatio(Math.min(isMobileViewport() ? 1.5 : 2, window.devicePixelRatio || 1));
+      renderer.setSize(viewport.width, viewport.height, false);
+      camera.aspect = viewport.width / viewport.height;
+      camera.updateProjectionMatrix();
+    }
+
+    resizeScene();
+    window.addEventListener("resize", resizeScene);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", resizeScene);
+    }
+
+    setStatus("READY");
   })();
-  </script>
+</script>
 </body>
 </html>
