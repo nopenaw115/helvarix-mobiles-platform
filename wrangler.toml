@@ -7,3 +7,29 @@
 }
 
 cpu_ms = 50
+name = "helvarix-orbital-platform"
+main = "src/index.js"
+compatibility_date = "2026-03-30"
+
+# Serve static assets (your frontend)
+[assets]
+directory = "./"
+binding = "ASSETS"
+
+# Routes (optional if using pages.dev)
+# routes = [
+#   { pattern = "yourdomain.com/*", zone_name = "yourdomain.com" }
+# ]
+
+# Dev settings
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Environment variables (example)
+[vars]
+ENVIRONMENT = "production"
+
+# Limits tuned for mobile-friendly delivery
+[limits]
+cpu_ms = 50
