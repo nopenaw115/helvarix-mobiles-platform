@@ -1,10 +1,4 @@
-{
-"name": "helvarix-mobile-orbital-platform",
-"compatibility_date": "2026-03-30",
-"assets": {
-"directory": "./"
-}
-}
+
 
 cpu_ms = 50
 name = "helvarix-orbital-platform"
